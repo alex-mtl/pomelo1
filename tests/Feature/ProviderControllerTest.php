@@ -57,4 +57,60 @@ class ProviderControllerTestTest extends ApiTestCase
         $this->assertEquals('John', $body['data'][0]['first_name']);
         $this->assertEquals('Smith', $body['data'][0]['last_name']);
     }
+
+    /**
+     * Test '/api/provider'
+     *
+     * @return void
+     * @dataProvider searchDataProvider
+     */
+    public function testIndexSearch(array $search, array $expect)
+    {
+        $this->post('/api/provider', ['first_name' => 'John', 'last_name' => 'Smith']);
+        $this->post('/api/provider', ['first_name' => 'Adam', 'last_name' => 'Smith']);
+        $this->post('/api/provider', ['first_name' => 'Robert', 'last_name' => 'Adams']);
+        $this->post('/api/provider', ['first_name' => 'John', 'last_name' => 'Doe']);
+
+
+        $response = $this->getJson('/api/provider?'.http_build_query($search));
+
+        $response->assertStatus(200);
+
+        $response->assertJsonFragment($expect['fragment']);
+    }
+
+    public function searchDataProvider(): array {
+        return [
+            'first_name => jo' => [
+                ['first_name' => 'jo'],
+                [
+                    'fragment' => [
+                        'last_name' => 'Smith',
+                        'last_name' => 'Doe',
+                        'total' => 2
+                    ]
+                ]
+            ],
+            'last_name => ith' => [
+                ['last_name' => 'ith'],
+                [
+                    'fragment' => [
+                        'first_name' => 'John',
+                        'first_name' => 'Adam',
+                        'total' => 2
+                    ]
+                ]
+            ],
+            'first_name=> ad, last_name => ith' => [
+                ['first_name' => 'ad', 'last_name' => 'ith'],
+                [
+                    'fragment' => [
+                        'first_name' => 'Adam',
+                        'last_name' => 'Smith',
+                        'total' => 1
+                    ]
+                ]
+            ],
+        ];
+    }
 }

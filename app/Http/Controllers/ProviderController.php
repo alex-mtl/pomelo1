@@ -4,20 +4,45 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ProviderResource;
 use App\Models\Provider;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class ProviderController extends Controller
 {
     const FIELDS = ['first_name', 'last_name'];
+
+    const INDEX_PARAMS = [
+        'id' => ['int'],
+        'first_name' => ['string'],
+        'last_name' => ['string']
+    ];
+
     /**
      * Display a listing of the providers.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $providers = Provider::paginate(10);
+        $where = $this->validate($request, self::INDEX_PARAMS);
+        $builder = $this->prepareIndexBuilder($where);
+        $providers = $builder->paginate(10);
         return ProviderResource::collection($providers);
+    }
+
+    private function prepareIndexBuilder(array $where): Builder {
+        $builder = Provider::query();
+        foreach ($where as $field => $value) {
+            switch ($field) {
+                case 'first_name':
+                case 'last_name':
+                    $builder->where($field, 'LIKE', "%{$value}%");
+                    break;
+                default:
+                    $builder->where($field, '=', $value);
+            }
+        }
+        return $builder;
     }
 
     /**
