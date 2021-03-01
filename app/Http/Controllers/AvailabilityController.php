@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\AvailabilityResource;
-use App\Http\Resources\ProviderResource;
 use App\Models\Availability;
-use App\Models\Provider;
 use App\Rules\SlotRange;
 use App\Rules\SlotStart;
 use Carbon\Carbon;

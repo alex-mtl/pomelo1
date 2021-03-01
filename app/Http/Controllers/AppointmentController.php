@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AppointmentResource;
 use App\Http\Resources\AvailabilityResource;
-use App\Http\Resources\ProviderResource;
 use App\Models\Availability;
-use App\Models\Provider;
 use App\Rules\SlotRange;
 use App\Rules\SlotStart;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class AppointmentController extends Controller
 {
@@ -43,7 +40,9 @@ class AppointmentController extends Controller
             $slot->update(['patient_id' => $params['patient_id']]);
         }
 
-        return new AvailabilityResource($slot);
+        return (new AppointmentResource($slot))
+            ->response()
+            ->setStatusCode(201);
     }
 
     /**

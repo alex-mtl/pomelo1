@@ -33,7 +33,7 @@ class AvailabilityControllerTest extends ApiTestCase
 
     public function postAvailabilityProvider(): array {
         return [
-            'normal' => [
+            'success' => [
                 [
                     'provider' => ['first_name' => 'Adam', 'last_name' => 'Smith'],
                     'slot' => [
@@ -57,6 +57,52 @@ class AvailabilityControllerTest extends ApiTestCase
                         'available' => true,
                         'slot_start' => '2021-02-28 21:00:00',
                         'slot_end' => '2021-02-28 21:14:00'
+                    ]
+                ]
+            ],
+            'invalid slot_end' => [
+                [
+                    'provider' => ['first_name' => 'Adam', 'last_name' => 'Smith'],
+                    'slot' => [
+                        'provider_id' => true,
+                        'slot_start' => '2021-02-28 21:00:00',
+                        'slot_end' => '2021-02-28 21:18:00'
+                    ],
+                ],
+                [
+                    'status' => 422,
+                    'structure' => [
+                        'errors' => [
+                            'slot_end'
+                        ],
+                        'message',
+                        'status'
+                    ],
+                    'fragment' => [
+                        "slot_end" =>["slot_start slot_end diff can't be more than 15 minutes."]
+                    ]
+                ]
+            ],
+            'invalid slot_start' => [
+                [
+                    'provider' => ['first_name' => 'Adam', 'last_name' => 'Smith'],
+                    'slot' => [
+                        'provider_id' => true,
+                        'slot_start' => '2021-02-28 21:03:00',
+                        'slot_end' => '2021-02-28 21:15:00'
+                    ],
+                ],
+                [
+                    'status' => 422,
+                    'structure' => [
+                        'errors' => [
+                            'slot_start'
+                        ],
+                        'message',
+                        'status'
+                    ],
+                    'fragment' => [
+                        "slot_start" =>["Not rounded to 15 minutes."]
                     ]
                 ]
             ],

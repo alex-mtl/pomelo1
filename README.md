@@ -24,15 +24,18 @@ cp .env.example .env
 ./artisan test
 ```
 If tests executed successfully we can check application using web browser.
+
 It is exposed on port 8080.
-Just vist `http://localhost:8080/` in your browser.
+
+Just visit `http://localhost:8080/` in your browser.
+
 If that port 8080 is busy you can change it in `docker-compose.yml`
 and rebuild docker container:
 ```
 docker-compose up --build -d
 ``` 
 
-Please note:
+### Please note:
 - Clinic Only one clinic is to be supported
   - A clinic has only one attribute, its name, which also acts as its unique identifier (ID)
 
