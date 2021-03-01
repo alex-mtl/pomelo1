@@ -34,3 +34,9 @@ and rebuild docker container:
 ```
 docker-compose up --build -d
 ``` 
+
+Since it is 99% api backend application it is more convenient
+to explore and test it not through the browser but using Postman
+
+You can find and import Postman [collection](https://github.com/alex-mtl/pomelo1/blob/master/docker/Pomelo%20Localhost.postman_environment.json)
+and Postman [environmen](https://github.com/alex-mtl/pomelo1/blob/master/docker/Pomelo%20Localhost.postman_environment.json)
