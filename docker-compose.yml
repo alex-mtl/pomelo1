@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  web:
+    image: nginx:alpine
+    ports:
+      - 8080:80
+    volumes:
+      - .:/var/www/pomelo
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - pomelo
+
+  php:
+    ## image: php:7.4.3-fpm-alpine
+    build:
+      context: ./docker/php-fpm
+      dockerfile: Dockerfile
+    volumes:
+      - .:/var/www/pomelo
+    expose:
+      - 9000
+    networks:
+      - pomelo
+  database:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    command: --init-file /data/application/init.sql
+    volumes:
+      - pomeloDB:/var/lib/mysql
+      - ./docker/mysql/init.sql:/data/application/init.sql
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: pomelo
+    networks:
+      - pomelo
+networks:
+  pomelo:
+volumes:
+  pomeloDB:
+  shared:
