@@ -5,7 +5,7 @@
 > **Requirement**: host should have docker installed
 ```
 ## Checkout and pull this repo to a new folder (eg: pml)
-git clone git@github.com:alex-mtl/pomelo.git pml
+git clone git@github.com:alex-mtl/pomelo1.git pml
 ## Build application services (php, mysql, nginx) using docker
 cd pml
 docker-compose up --build -d
